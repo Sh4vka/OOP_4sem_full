@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Boots.h" />
+    <ClInclude Include="Interface.h" />
     <ClInclude Include="Location.h" />
     <ClInclude Include="NewBoots.h" />
     <ClInclude Include="Point.h" />

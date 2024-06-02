@@ -1,11 +1,14 @@
 #include <iostream>
 #include "windows.h"
+
 #include "Location.h"
 #include "Point.h"
 #include "Boots.h"
 #include "Rock.h"
 #include "NewBoots.h"
 #include "Road.h"
+
+#include "Interface.h"
 
 #define KEY_DOWN(vk) ((GetAsyncKeyState(vk) & 0x8000) ? 1 : 0)
 
@@ -43,7 +46,7 @@ State getNextState(State currentState, Event event) {
     return transitionTable[currentState][event];
 }
 
-Event getEvent(Boots* boots, Rock* rock) {
+Event getEvent(Interface* boots, Interface* rock) {
     if (KEY_DOWN(VK_RIGHT)) return MoveRight;
     if (KEY_DOWN(VK_LEFT)) return MoveLeft;
     if (boots->GetX() + 160 >= rock->GetX() && boots->GetY() + 160 >= rock->GetY() &&
@@ -63,9 +66,9 @@ int main()
     int x1_rock = 700, y1_rock = 390, x2_rock = x1_rock + 50, y2_rock = y1_rock + 20;
     int x1_road = 0, y1_road = 300, x2_road = 1000, y2_road = 420;
 
-    Boots* boots = new Boots(x1, y1, x2, y2);
-    Rock* rock = new Rock(x1_rock, y1_rock, x2_rock, y2_rock);
-    Road* road = new Road(x1_road, y1_road, x2_road, y2_road, x1, x2);
+    Interface* boots = new Boots(x1, y1, x2, y2);
+    Interface* rock = new Rock(x1_rock, y1_rock, x2_rock, y2_rock);
+    Interface* road = new Road(x1_road, y1_road, x2_road, y2_road, x1, x2);
     NewBoots* newBoots = nullptr;
     State currentState = BootsNormal;
 
