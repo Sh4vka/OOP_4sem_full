@@ -8,6 +8,16 @@ Boots::Boots(int init_x1, int init_y1, int init_x2, int init_y2)
 
 Boots::~Boots() {}
 
+int Boots::GetX() const 
+{
+    return x1;
+}
+
+int Boots::GetY() const 
+{
+    return y1;
+}
+
 void Boots::show_body() 
 {
     int x2 = x1 + 70;

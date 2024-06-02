@@ -7,6 +7,8 @@
 #include "NewBoots.h"
 #include "Road.h"
 
+#define KEY_DOWN(vk) ((GetAsyncKeyState(vk) & 0x8000) ? 1 : 0)
+
 using namespace std;
 
 HDC hdc;
@@ -27,176 +29,108 @@ HWND getConsoleWindow()
     return hwnd;
 }
 
+enum State { BootsNormal, BreakBoots };
+enum Event { MoveRight, MoveLeft, CollisionWithRock, NoEvent };
+
+State getNextState(State currentState, Event event) {
+    // Таблица переходов
+    State transitionTable[2][4] = {
+        //  MoveRight   MoveLeft   CollisionWithRock   NoEvent
+        { BootsNormal, BootsNormal, BreakBoots,         BootsNormal }, // для состояния BootsNormal
+        { BreakBoots,  BreakBoots,  BreakBoots,         BreakBoots }   // для состояния BreakBoots
+    };
+
+    return transitionTable[currentState][event];
+}
+
+Event getEvent(Boots* boots, Rock* rock) {
+    if (KEY_DOWN(VK_RIGHT)) return MoveRight;
+    if (KEY_DOWN(VK_LEFT)) return MoveLeft;
+    if (boots->GetX() + 160 >= rock->GetX() && boots->GetY() + 160 >= rock->GetY() &&
+        boots->GetX() <= rock->GetX() && boots->GetY() <= rock->GetY() + 20)
+        return CollisionWithRock;
+    return NoEvent;
+}
+
 int main()
 {
+    // Начальные настройки консоли и объектов
     system("color f0");
-
     HWND hwnd = getConsoleWindow();
     hdc = GetWindowDC(hwnd);
 
-    //координаты сапога
-    int x1 = 230;
-    int y1 = 230;
-    int x2 = x1 + 70;
-    int y2 = y1 + 160;
+    int x1 = 230, y1 = 230, x2 = x1 + 70, y2 = y1 + 160;
+    int x1_rock = 700, y1_rock = 390, x2_rock = x1_rock + 50, y2_rock = y1_rock + 20;
+    int x1_road = 0, y1_road = 300, x2_road = 1000, y2_road = 420;
 
-    //координаты камня
-    int x1_rock = 700;
-    int y1_rock = 390;
-    int x2_rock = 750;
-    int y2_rock = 410;
+    Boots* boots = new Boots(x1, y1, x2, y2);
+    Rock* rock = new Rock(x1_rock, y1_rock, x2_rock, y2_rock);
+    Road* road = new Road(x1_road, y1_road, x2_road, y2_road, x1, x2);
+    NewBoots* newBoots = nullptr;
+    State currentState = BootsNormal;
 
-    //координаты дороги
-    int x1_road = 0;
-    int y1_road = 300;
-    int x2_road = 1000;
-    int y2_road = 420;
-
-    if (hwnd != NULL)
-    {
+    if (hwnd != NULL) {
         hdc = GetWindowDC(hwnd);
-        if (hdc != 0)
-        {
-            Boots ABoots = Boots(x1, y1, x2, y2);
-            ABoots.show();
-            Rock ARock = Rock(x1_rock, y1_rock, x2_rock, y2_rock);
-            ARock.show();
-            Road ARoad = Road(x1_road, y1_road, x2_road, y2_road, x1, x2);
-            ARoad.show();
-            ARoad.hide(x1, x2);
-            while (true)
-            {
-                if (GetAsyncKeyState(VK_RIGHT))
-                {
-                    for (int i = 0; i <= 30; i += 10)
-                    {
-                        x1 = x1 + i;
-                        y1 = y1 - i;
-                        x2 = x2 + i;
-                        y2 = y2 - i;
+        if (hdc != 0) {
+            boots->show();
+            rock->show();
+            road->show();
 
-                        ABoots.move_to(x1, y1);  // Перемещаем сапоги
-                        Sleep(2);
+            while (true) {
+                Event currentEvent = getEvent(boots, rock);
+                State newState = getNextState(currentState, currentEvent);
+
+                switch (newState) {
+                case BootsNormal:
+                    if (currentEvent == MoveRight) {
+                        boots->move_to(boots->GetX() + 10, boots->GetY() - 20);
+                        boots->move_to(boots->GetX() + 10, boots->GetY() + 20);
+                        rock->show();
+                        road->show();
+                        Sleep(10);
                     }
-                    ARoad.show();
-                    ARoad.hide(x1, x2);
-
-                    for (int i = 0; i <= 30; i += 10)
-                    {
-                        x1 = x1 + i;
-                        y1 = y1 + i;
-                        x2 = x2 + i;
-                        y2 = y2 + i;
-
-                        ABoots.move_to(x1, y1);  // Перемещаем сапоги
-                        Sleep(2);
+                    if (currentEvent == MoveLeft) {
+                        boots->move_to(boots->GetX() - 10, boots->GetY() - 20);
+                        boots->move_to(boots->GetX() - 10, boots->GetY() + 20);
+                        rock->show();
+                        road->show();
+                        Sleep(10);
                     }
-
-                    ARoad.show();
-                    ARoad.hide(x1, x2);
-
-                    if (x1 + 70 + (x1 + 70 - x1) * 1.3 >= x1_rock)
-                    {
-                        ABoots.hide();
-                        break;
+                    break;
+                case BreakBoots:
+                    if (currentState != BreakBoots) {
+                        boots->hide();
+                        newBoots = new NewBoots(boots->GetX(), boots->GetY(), boots->GetX() + 70, boots->GetY() + 160);
+                        newBoots->show();
                     }
+                    if (currentEvent == MoveRight) {
+                        newBoots->move_to(newBoots->GetX() + 10, newBoots->GetY() - 20);
+                        newBoots->move_to(newBoots->GetX() + 10, newBoots->GetY() + 20);
+                        rock->show();
+                        road->show();
+                        Sleep(10);
+                    }
+                    if (currentEvent == MoveLeft) {
+                        newBoots->move_to(newBoots->GetX() - 10, newBoots->GetY() - 20);
+                        newBoots->move_to(newBoots->GetX() - 10, newBoots->GetY() + 20);
+                        rock->show();
+                        road->show();
+                        Sleep(10);
+                    }
+                    break;
                 }
 
-                if (GetAsyncKeyState(VK_LEFT))
-                {
-                    for (int i = 0; i <= 30; i += 10)
-                    {
-                        x1 = x1 - i;
-                        y1 = y1 - i;
-                        x2 = x2 - i;
-                        y2 = y2 - i;
-
-                        ABoots.move_to(x1, y1);  // Перемещаем сапоги
-                        Sleep(2);
-                    }
-                    ARoad.show();
-                    ARoad.hide(x1, x2);
-
-                    for (int i = 0; i <= 30; i += 10)
-                    {
-                        x1 = x1 - i;
-                        y1 = y1 + i;
-                        x2 = x2 - i;
-                        y2 = y2 + i;
-
-                        ABoots.move_to(x1, y1);  // Перемещаем сапоги
-                        Sleep(2);
-                    }
-                    ARoad.show();
-                    ARoad.hide(x1, x2);
-                }
+                currentState = newState;
             }
 
-            NewBoots ANewBoots = NewBoots(x1, y1, x2, y2);
-            ANewBoots.show();
-            while (true)
-            {
-                ARock.show();
-                if (GetAsyncKeyState(VK_RIGHT))
-                {
-                    for (int i = 0; i <= 30; i += 10)
-                    {
-                        x1 = x1 + i;
-                        y1 = y1 - i;
-                        x2 = x2 + i;
-                        y2 = y2 - i;
-
-                        ANewBoots.move_to(x1, y1);  // Перемещаем сапоги
-                        Sleep(2);
-                    }
-                    ARoad.show();
-                    ARoad.hide(x1, x2);
-
-                    for (int i = 0; i <= 30; i += 10)
-                    {
-                        x1 = x1 + i;
-                        y1 = y1 + i;
-                        x2 = x2 + i;
-                        y2 = y2 + i;
-
-                        ANewBoots.move_to(x1, y1);  // Перемещаем сапоги
-                        Sleep(2);
-                    }
-                    ARoad.show();
-                    ARoad.hide(x1, x2);
-                }
-
-                if (GetAsyncKeyState(VK_LEFT))
-                {
-                    for (int i = 0; i <= 30; i += 10)
-                    {
-                        x1 = x1 - i;
-                        y1 = y1 - i;
-                        x2 = x2 - i;
-                        y2 = y2 - i;
-
-                        ANewBoots.move_to(x1, y1);  // Перемещаем сапоги
-                        Sleep(2);
-                    }
-                    ARoad.show();
-                    ARoad.hide(x1, x2);
-
-                    for (int i = 0; i <= 30; i += 10)
-                    {
-                        x1 = x1 - i;
-                        y1 = y1 + i;
-                        x2 = x2 - i;
-                        y2 = y2 + i;
-
-                        ANewBoots.move_to(x1, y1);  // Перемещаем сапоги
-                        Sleep(2);
-                    }
-                    ARoad.show();
-                    ARoad.hide(x1, x2);
-                }
-            }
+            ReleaseDC(hwnd, hdc);
         }
-        ReleaseDC(hwnd, hdc);
     }
+
+    delete boots;
+    delete rock;
+    delete road;
+    if (newBoots) delete newBoots;
+
     return 0;
 }

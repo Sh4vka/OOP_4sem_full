@@ -11,6 +11,9 @@ public:
     Boots(int init_x1, int init_y1, int init_x2, int init_y2);
     ~Boots();
 
+    int GetX() const;
+    int GetY() const;
+
     void show_body();
     void show_kabluc();
     void show_nose();
