@@ -9,6 +9,7 @@
 #include "Road.h"
 
 #include "Interface.h"
+#include "Ked.h" // Добавили заголовочный файл для класса Ked
 
 #define KEY_DOWN(vk) ((GetAsyncKeyState(vk) & 0x8000) ? 1 : 0)
 
@@ -38,7 +39,7 @@ enum Event { MoveRight, MoveLeft, CollisionWithRock, NoEvent };
 State getNextState(State currentState, Event event) {
     // Таблица переходов
     State transitionTable[2][4] = {
-        //  MoveRight   MoveLeft   CollisionWithRock   NoEvent
+        //  MoveRight   MoveLeft    CollisionWithRock     NoEvent
         { BootsNormal, BootsNormal, BreakBoots,         BootsNormal }, // для состояния BootsNormal
         { BreakBoots,  BreakBoots,  BreakBoots,         BreakBoots }   // для состояния BreakBoots
     };
@@ -67,6 +68,7 @@ int main()
     int x1_road = 0, y1_road = 300, x2_road = 1000, y2_road = 420;
 
     Interface* boots = new Boots(x1, y1, x2, y2);
+    Interface* ked = new Ked(x1 - 170, y1, x2 - 170, y2, 120); // Создали объект кедов и установили начальные координаты
     Interface* rock = new Rock(x1_rock, y1_rock, x2_rock, y2_rock);
     Interface* road = new Road(x1_road, y1_road, x2_road, y2_road, x1, x2);
     NewBoots* newBoots = nullptr;
@@ -76,6 +78,7 @@ int main()
         hdc = GetWindowDC(hwnd);
         if (hdc != 0) {
             boots->show();
+            ked->show(); // Показываем кеды
             rock->show();
             road->show();
 
@@ -88,6 +91,9 @@ int main()
                     if (currentEvent == MoveRight) {
                         boots->move_to(boots->GetX() + 10, boots->GetY() - 20);
                         boots->move_to(boots->GetX() + 10, boots->GetY() + 20);
+                        Sleep(10);
+                        ked->move_to(ked->GetX() + 10, ked->GetY() - 40); // Перемещаем кеды вправо
+                        ked->move_to(ked->GetX() + 10, ked->GetY() + 40);
                         rock->show();
                         road->show();
                         Sleep(10);
@@ -95,6 +101,9 @@ int main()
                     if (currentEvent == MoveLeft) {
                         boots->move_to(boots->GetX() - 10, boots->GetY() - 20);
                         boots->move_to(boots->GetX() - 10, boots->GetY() + 20);
+                        Sleep(10);
+                        ked->move_to(ked->GetX() - 10, ked->GetY() - 40); // Перемещаем кеды влево
+                        ked->move_to(ked->GetX() - 10, ked->GetY() + 40);
                         rock->show();
                         road->show();
                         Sleep(10);
@@ -109,6 +118,9 @@ int main()
                     if (currentEvent == MoveRight) {
                         newBoots->move_to(newBoots->GetX() + 10, newBoots->GetY() - 20);
                         newBoots->move_to(newBoots->GetX() + 10, newBoots->GetY() + 20);
+                        Sleep(10);
+                        ked->move_to(ked->GetX() + 10, ked->GetY() - 40); // Перемещаем кеды вправо
+                        ked->move_to(ked->GetX() + 10, ked->GetY() + 40);
                         rock->show();
                         road->show();
                         Sleep(10);
@@ -116,6 +128,9 @@ int main()
                     if (currentEvent == MoveLeft) {
                         newBoots->move_to(newBoots->GetX() - 10, newBoots->GetY() - 20);
                         newBoots->move_to(newBoots->GetX() - 10, newBoots->GetY() + 20);
+                        Sleep(10);
+                        ked->move_to(ked->GetX() - 10, ked->GetY() - 40); // Перемещаем кеды влево
+                        ked->move_to(ked->GetX() - 10, ked->GetY() + 40);
                         rock->show();
                         road->show();
                         Sleep(10);
@@ -133,7 +148,9 @@ int main()
     delete boots;
     delete rock;
     delete road;
-    if (newBoots) delete newBoots;
+    delete ked;
+    if (newBoots) 
+        delete newBoots;
 
     return 0;
 }

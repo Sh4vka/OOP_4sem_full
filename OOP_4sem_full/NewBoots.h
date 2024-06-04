@@ -10,10 +10,10 @@ public:
 	~NewBoots();
 
 	void show_new_nose();
-	void show();
+	virtual void show();
 
 	void hide_new_nose();
-	void hide();
+	virtual void hide();
 };
 
 #endif // NEWBOOTS_H

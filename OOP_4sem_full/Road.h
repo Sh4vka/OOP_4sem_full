@@ -12,8 +12,8 @@ public:
     Road(int init_x1, int init_y1, int init_x2, int init_y2, int init_xs, int init_ys);
     ~Road();
 
-	void show();
-    void hide(int xs1, int x2s);
+	virtual void show();
+    virtual void hide(int xs1, int x2s);
 };
 
 #endif // ROAD_H

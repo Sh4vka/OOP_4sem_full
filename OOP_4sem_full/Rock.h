@@ -9,7 +9,7 @@ public:
     Rock(int init_x1, int init_y1, int init_x2, int init_y2);
     ~Rock();
 
-    void show();
+    virtual void show();
 };
 
 #endif // ROCK_H
