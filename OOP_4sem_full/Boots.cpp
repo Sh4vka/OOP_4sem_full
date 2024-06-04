@@ -20,8 +20,6 @@ int Boots::GetY() const
 
 void Boots::show_body() 
 {
-    int x2 = x1 + 70;
-    int y2 = y1 + 160;
     int newx1 = x1;
     while (newx1 <= x2) //длина сапога
     {
@@ -45,8 +43,6 @@ void Boots::show_body()
 
 void Boots::show_kabluc()
 {
-    int x2 = x1 + 70;
-    int y2 = y1 + 160;
     int newx1 = x1; //новые переменые чтоб не портить значения
     int newy2 = y2;
 
@@ -71,8 +67,6 @@ void Boots::show_kabluc()
 
 void Boots::show_nose()
 {
-    int x2 = x1 + 70;
-    int y2 = y1 + 160;
     int newx1 = x2;
     int newx2 = x2 + (x2 - x1) * 1.3;
     int newy1 = y1 + (y2 - y1) * 0.85;
@@ -108,8 +102,6 @@ void Boots::show()
 
 void Boots::hide_body()
 {
-    int x2 = x1 + 70;
-    int y2 = y1 + 160;
     int newx1 = x1;
     while (newx1 <= x2) //длина сапога
     {
@@ -133,8 +125,6 @@ void Boots::hide_body()
 
 void Boots::hide_kabluc()
 {
-    int x2 = x1 + 70;
-    int y2 = y1 + 160;
     int newx1 = x1; //новые переменые чтоб не портить значения
     int newy2 = y2;
 
@@ -192,4 +182,14 @@ void Boots::hide()
     hide_body();
     hide_kabluc();
     hide_nose();
+}
+
+void Boots::move_to(int newx1, int newy1)
+{
+    hide();
+    x1 += newx1;
+    x2 += newx1;
+    y1 += newy1;
+    y2 += newy1;
+    show();
 }

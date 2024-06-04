@@ -68,7 +68,7 @@ int main()
     int x1_road = 0, y1_road = 300, x2_road = 1000, y2_road = 420;
 
     Interface* boots = new Boots(x1, y1, x2, y2);
-    Interface* ked = new Ked(x1 - 170, y1, x2 - 170, y2, 120); // Создали объект кедов и установили начальные координаты
+    Interface* ked = new Ked(x1 - 200, y1, x2 - 170, y2, 120); // Создали объект кедов и установили начальные координаты
     Interface* rock = new Rock(x1_rock, y1_rock, x2_rock, y2_rock);
     Interface* road = new Road(x1_road, y1_road, x2_road, y2_road, x1, x2);
     NewBoots* newBoots = nullptr;
@@ -89,21 +89,23 @@ int main()
                 switch (newState) {
                 case BootsNormal:
                     if (currentEvent == MoveRight) {
-                        boots->move_to(boots->GetX() + 10, boots->GetY() - 20);
-                        boots->move_to(boots->GetX() + 10, boots->GetY() + 20);
+                        boots->move_to(10, - 20);
+                        boots->move_to(10, 20);
                         Sleep(10);
-                        ked->move_to(ked->GetX() + 10, ked->GetY() - 40); // Перемещаем кеды вправо
-                        ked->move_to(ked->GetX() + 10, ked->GetY() + 40);
+                        ked->move_to(10, - 40); // Перемещаем кеды вправо
+                        Sleep(10);
+                        ked->move_to(10, 40);
                         rock->show();
                         road->show();
                         Sleep(10);
                     }
                     if (currentEvent == MoveLeft) {
-                        boots->move_to(boots->GetX() - 10, boots->GetY() - 20);
-                        boots->move_to(boots->GetX() - 10, boots->GetY() + 20);
+                        boots->move_to(- 10, - 20);
+                        boots->move_to(- 10, 20);
                         Sleep(10);
-                        ked->move_to(ked->GetX() - 10, ked->GetY() - 40); // Перемещаем кеды влево
-                        ked->move_to(ked->GetX() - 10, ked->GetY() + 40);
+                        ked->move_to(- 10, - 40); // Перемещаем кеды влево
+                        Sleep(10);
+                        ked->move_to(- 10, 40);
                         rock->show();
                         road->show();
                         Sleep(10);
@@ -116,21 +118,23 @@ int main()
                         newBoots->show();
                     }
                     if (currentEvent == MoveRight) {
-                        newBoots->move_to(newBoots->GetX() + 10, newBoots->GetY() - 20);
-                        newBoots->move_to(newBoots->GetX() + 10, newBoots->GetY() + 20);
+                        newBoots->move_to(10, - 20);
+                        newBoots->move_to(10, 20);
                         Sleep(10);
-                        ked->move_to(ked->GetX() + 10, ked->GetY() - 40); // Перемещаем кеды вправо
-                        ked->move_to(ked->GetX() + 10, ked->GetY() + 40);
+                        ked->move_to(10, - 40); // Перемещаем кеды вправо
+                        Sleep(10);
+                        ked->move_to(10, 40);
                         rock->show();
                         road->show();
                         Sleep(10);
                     }
                     if (currentEvent == MoveLeft) {
-                        newBoots->move_to(newBoots->GetX() - 10, newBoots->GetY() - 20);
-                        newBoots->move_to(newBoots->GetX() - 10, newBoots->GetY() + 20);
+                        newBoots->move_to(- 10, - 20);
+                        newBoots->move_to(- 10, 20);
                         Sleep(10);
-                        ked->move_to(ked->GetX() - 10, ked->GetY() - 40); // Перемещаем кеды влево
-                        ked->move_to(ked->GetX() - 10, ked->GetY() + 40);
+                        ked->move_to(- 10, - 40); // Перемещаем кеды влево
+                        Sleep(10);
+                        ked->move_to(- 10, 40);
                         rock->show();
                         road->show();
                         Sleep(10);

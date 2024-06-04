@@ -10,35 +10,13 @@ Ked::~Ked() {}
 
 void Ked::show_new_body()
 {
-    int ny1 = y1 + distanse;
-    int x2 = x1 + 90;
-    int y2 = ny1 + 160 - distanse;
-    int newx1 = x1;
-    while (newx1 <= x2) //длина сапога
-    {
-        Point ABoots = Point(newx1, ny1);
-        Point BBoots = Point(newx1, y2);
-        ABoots.show();
-        BBoots.show();
-        newx1++;
-    }
-
-    int newy1 = ny1;
-    while (newy1 <= y2) // высота сапога
-    {
-        Point ABoots = Point(x1, newy1);
-        Point BBoots = Point(x2, newy1);
-        ABoots.show();
-        BBoots.show();
-        newy1++;
-    }
+    Boots ABoots = Boots(x1, y1 + distanse, x2, y2);
+    ABoots.show_body();
 }
 
 void Ked::show_new_nose()
 {
     int ny1 = y1 + distanse;
-    int x2 = x1 + 90;
-    int y2 = ny1 + 160 - distanse;
     int newx1 = x2;
     int newx2 = x2 + 60;
 
@@ -71,36 +49,13 @@ void Ked::show()
 
 void Ked::hide_new_body()
 {
-    int ny1 = y1 + distanse;
-    int x2 = x1 + 90;
-
-    int y2 = ny1 + 160 - distanse;
-    int newx1 = x1;
-    while (newx1 <= x2) //длина сапога
-    {
-        Point ABoots = Point(newx1, ny1);
-        Point BBoots = Point(newx1, y2);
-        ABoots.hide();
-        BBoots.hide();
-        newx1++;
-    }
-
-    int newy1 = ny1;
-    while (newy1 <= y2) // высота сапога
-    {
-        Point ABoots = Point(x1, newy1);
-        Point BBoots = Point(x2, newy1);
-        ABoots.hide();
-        BBoots.hide();
-        newy1++;
-    }
+    Boots ABoots = Boots(x1, y1 + distanse, x2, y2);
+    ABoots.hide_body();
 }
 
 void Ked::hide_new_nose()
 {
     int ny1 = y1 + distanse;
-    int x2 = x1 + 90;
-    int y2 = ny1 + 160 - distanse;
     int newx1 = x2;
     int newx2 = x2 + 60;
 

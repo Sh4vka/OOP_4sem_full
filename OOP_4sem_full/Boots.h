@@ -23,6 +23,8 @@ public:
     void hide_kabluc();
     void hide_nose();
     virtual void hide();
+
+    virtual void move_to(int newx1, int newy1);
 };
 
 #endif // BOOTS_H

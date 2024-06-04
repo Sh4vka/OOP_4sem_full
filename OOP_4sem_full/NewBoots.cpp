@@ -10,8 +10,6 @@ NewBoots::~NewBoots() {}
 
 void NewBoots::show_new_nose()
 {
-    int x2 = x1 + 70;
-    int y2 = y1 + 160;
     int newx1 = x2;
     int newx2 = (x2 + (x2 - x1) * 1.3 - 50);
     int newy1 = y1 + (y2 - y1) * 0.85;
@@ -55,8 +53,6 @@ void NewBoots::show()
 
 void NewBoots::hide_new_nose()
 {
-    int x2 = x1 + 70;
-    int y2 = y1 + 160;
     int newx1 = x2;
     int newx2 = (x2 + (x2 - x1) * 1.3 - 50);
     int newy1 = y1 + (y2 - y1) * 0.85;
